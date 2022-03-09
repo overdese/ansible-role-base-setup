@@ -1,8 +1,5 @@
 ---
 
-- debug:
-    msg: "System {{ inventory_hostname }} by {{ ansible_os_family }} and has uuid {{ ansible_product_uuid }}."
-
 - name: set timezone to {{ timezone }}
   timezone:
     name: "{{ timezone }}"
