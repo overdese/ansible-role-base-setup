@@ -1,0 +1,23 @@
+---
+
+- debug:
+    msg: "System {{ inventory_hostname }} by {{ ansible_os_family }} and has uuid {{ ansible_product_uuid }}."
+
+- name: set timezone to {{ timezone }}
+  timezone:
+    name: "{{ timezone }}"
+  when: set_timezone is true
+
+- name: install packages for Debian family
+  apt:
+    update_cache: yes
+    name: "{{ debian_packages }}"
+  when: ansible_os_family == "Debian"
+
+- name: install packages for RedHat family
+  yum:
+    update_cache: yes
+    name: "{{ redhat_packages }}"
+  when: ansible_os_family == "RedHat"
+
+...

@@ -1,0 +1,39 @@
+---
+
+set_timezone: true
+timezone: Europe/Moscow
+
+debian_packages:
+  - screen
+  - htop
+  - bash-completion
+  - git
+  - lsof
+  - ca-certificates
+  - nmap
+  - tcpdump
+  - zip
+  - unzip
+  - rsync
+  - curl
+  - wget
+  - mc
+  - emacs-nox
+
+redhat_packages:
+  - screen
+  - htop
+  - bash-completion
+  - git
+  - lsof
+  - ca-certificates
+  - nmap
+  - tcpdump
+  - zip
+  - unzip
+  - rsync
+  - curl
+  - wget
+  - mc
+  - emacs-nox
+...
