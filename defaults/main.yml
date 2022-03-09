@@ -1,6 +1,6 @@
 ---
 
-set_timezone: true
+set_timezone: false
 timezone: Europe/Moscow
 
 debian_packages:
