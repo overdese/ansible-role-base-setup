@@ -1,9 +1,9 @@
 ---
 
-set_timezone: false
-timezone: Europe/Moscow
+common_set_timezone: false
+common_timezone: Europe/Moscow
 
-debian_packages:
+common_debian_packages:
   - screen
   - htop
   - bash-completion
@@ -20,7 +20,7 @@ debian_packages:
   - mc
   - emacs-nox
 
-redhat_packages:
+common_redhat_packages:
   - screen
   - htop
   - bash-completion

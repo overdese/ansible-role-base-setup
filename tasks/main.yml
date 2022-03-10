@@ -1,20 +1,20 @@
 ---
 
-- name: set timezone to {{ timezone }}
+- name: set timezone to {{ common_timezone }}
   timezone:
-    name: "{{ timezone }}"
-  when: set_timezone is true
+    name: "{{ common_timezone }}"
+  when: common_set_timezone is true
 
 - name: install packages for Debian family
   apt:
     update_cache: yes
-    name: "{{ debian_packages }}"
+    name: "{{ common_debian_packages }}"
   when: ansible_os_family == "Debian"
 
 - name: install packages for RedHat family
   yum:
     update_cache: yes
-    name: "{{ redhat_packages }}"
+    name: "{{ common_redhat_packages }}"
   when: ansible_os_family == "RedHat"
 
 ...
