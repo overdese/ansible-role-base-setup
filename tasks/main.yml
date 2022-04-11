@@ -11,10 +11,22 @@
     name: "{{ cs_debian_packages }}"
   when: ansible_os_family == "Debian"
 
+- name: install ext packages for Debian family
+  apt:
+    update_cache: yes
+    name: "{{ cs_debian_ext_packages }}"
+  when: ansible_os_family == "Debian" and (cs_debian_ext_packages|length>0)
+
 - name: install packages for RedHat family
   yum:
     update_cache: yes
     name: "{{ cs_redhat_packages }}"
   when: ansible_os_family == "RedHat"
+
+- name: install ext packages for RedHat family
+  yum:
+    update_cache: yes
+    name: "{{ cs_redhat_ext_packages }}"
+  when: ansible_os_family == "RedHat" and (cs_redhat_ext_packages|length>0)
 
 ...

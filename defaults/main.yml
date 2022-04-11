@@ -3,6 +3,8 @@
 cs_set_timezone: false
 cs_timezone: Europe/Moscow
 
+cs_debian_ext_packages: []
+
 cs_debian_packages:
   - screen
   - htop
@@ -19,6 +21,8 @@ cs_debian_packages:
   - wget
   - mc
   - emacs-nox
+
+cs_redhat_ext_packages: []
 
 cs_redhat_packages:
   - screen
