@@ -1,4 +1,4 @@
-# Ansible role for install common settings
+# Ansible role for server base setup
 
 - install packages
 - set timezone
