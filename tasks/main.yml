@@ -1,21 +1,21 @@
 ---
 
-- name: set timezone to {{ cs_timezone }}
+- name: set timezone to {{ timezone }}
   timezone:
-    name: "{{ cs_timezone }}"
-  when: cs_set_timezone is true
+    name: "{{ timezone }}"
+  when: set_timezone is true
 
 - name: install packages for Debian family
   block:
     - name: install default packages for Debian family
       apt:
         update_cache: yes
-        name: "{{ cs_debian_packages }}"
+        name: "{{ debian_packages }}"
 
     - name: install ext packages for Debian family
       apt:
-        name: "{{ cs_debian_ext_packages }}"
-      when: cs_debian_ext_packages|length>0
+        name: "{{ debian_ext_packages }}"
+      when: debian_ext_packages|length>0
   when: ansible_os_family == "Debian"
 
 - name: install packages for RedHat family
@@ -23,12 +23,12 @@
     - name: install default packages for RedHat family
       yum:
         update_cache: yes
-        name: "{{ cs_redhat_packages }}"
+        name: "{{ redhat_packages }}"
 
     - name: install ext packages for RedHat family
       yum:
-        name: "{{ cs_redhat_ext_packages }}"
-      when: cs_redhat_ext_packages|length>0
+        name: "{{ redhat_ext_packages }}"
+      when: redhat_ext_packages|length>0
   when: ansible_os_family == "RedHat"
 
 ...
