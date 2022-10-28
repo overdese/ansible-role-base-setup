@@ -6,25 +6,29 @@
   when: cs_set_timezone is true
 
 - name: install packages for Debian family
-  apt:
-    update_cache: yes
-    name: "{{ cs_debian_packages }}"
+  block:
+    - name: install default packages for Debian family
+      apt:
+        update_cache: yes
+        name: "{{ cs_debian_packages }}"
+
+    - name: install ext packages for Debian family
+      apt:
+        name: "{{ cs_debian_ext_packages }}"
+      when: cs_debian_ext_packages|length>0
   when: ansible_os_family == "Debian"
 
-- name: install ext packages for Debian family
-  apt:
-    name: "{{ cs_debian_ext_packages }}"
-  when: ansible_os_family == "Debian" and (cs_debian_ext_packages|length>0)
-
 - name: install packages for RedHat family
-  yum:
-    update_cache: yes
-    name: "{{ cs_redhat_packages }}"
-  when: ansible_os_family == "RedHat"
+  block:
+    - name: install default packages for RedHat family
+      yum:
+        update_cache: yes
+        name: "{{ cs_redhat_packages }}"
 
-- name: install ext packages for RedHat family
-  yum:
-    name: "{{ cs_redhat_ext_packages }}"
-  when: ansible_os_family == "RedHat" and (cs_redhat_ext_packages|length>0)
+    - name: install ext packages for RedHat family
+      yum:
+        name: "{{ cs_redhat_ext_packages }}"
+      when: cs_redhat_ext_packages|length>0
+  when: ansible_os_family == "RedHat"
 
 ...
