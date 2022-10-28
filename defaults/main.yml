@@ -17,7 +17,6 @@ debian_packages:
   - curl
   - mc
 
-
 redhat_ext_packages: []
 
 redhat_packages:
@@ -31,5 +30,11 @@ redhat_packages:
   - rsync
   - curl
   - mc
+
+# fail2ban only debian family availible
+fail2ban_ssh: false
+fail2ban_ssh_maxretry: 5
+fail2ban_ssh_bantime: 22m
+fail2ban_uninstall: false
 
 ...

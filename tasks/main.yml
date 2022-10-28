@@ -1,19 +1,19 @@
 ---
 
 - name: set timezone to {{ timezone }}
-  timezone:
+  community.general.timezone:
     name: "{{ timezone }}"
   when: set_timezone is true
 
 - name: install packages for Debian family
   block:
     - name: install default packages for Debian family
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
         name: "{{ debian_packages }}"
 
     - name: install ext packages for Debian family
-      apt:
+      ansible.builtin.apt:
         name: "{{ debian_ext_packages }}"
       when: debian_ext_packages|length>0
   when: ansible_os_family == "Debian"
@@ -21,14 +21,50 @@
 - name: install packages for RedHat family
   block:
     - name: install default packages for RedHat family
-      yum:
+      ansible.builtin.yum:
         update_cache: yes
         name: "{{ redhat_packages }}"
 
     - name: install ext packages for RedHat family
-      yum:
+      ansible.builtin.yum:
         name: "{{ redhat_ext_packages }}"
       when: redhat_ext_packages|length>0
   when: ansible_os_family == "RedHat"
+
+- name: deploy fail2ban on Debian
+  block:
+    - name: install fail2ban
+      ansible.builtin.apt:
+        update_cache: yes
+        name: fail2ban
+      register: fail2ban_install
+    - name: copy defaults-debian.local file
+      ansible.builtin.template:
+        src: templates/defaults-debian.local.j2
+        dest: /etc/fail2ban/jail.d/defaults-debian.local
+        mode: u=rw,g=r,o=r
+      register: fail2ban_copy_config
+    - name: enable and restart service fail2ban
+      ansible.builtin.service:
+        name: fail2ban
+        enabled: yes
+        state: restarted
+      when: fail2ban_install.changed or fail2ban_copy_config.changed
+  when: fail2ban_ssh is true and ansible_os_family == "Debian"
+
+- name: remove fail2ban
+  block:
+    - name: disable service fail2ban
+      ansible.builtin.service:
+        name: fail2ban
+        enabled: no
+        state: stopped
+      ignore_errors: yes
+    - name: remove fail2ban package
+      ansible.builtin.apt:
+        name: fail2ban
+        state: absent
+        purge: yes
+  when: fail2ban_uninstall is true
 
 ...
