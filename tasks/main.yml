@@ -5,34 +5,30 @@
     name: "{{ timezone }}"
   when: set_timezone is true
 
-- name: install packages for Debian family
+- name: upgrade packages
+  ansible.builtin.apt:
+    upgrade: yes
+    update_cache: yes
+  when: upgrade_packages is true
+
+- name: install default packages
+  ansible.builtin.apt:
+    update_cache: yes
+    name: "{{ packages }}"
+
+- name: install ext packages
+  ansible.builtin.apt:
+    name: "{{ ext_packages }}"
+  when: ext_packages|length>0
+
+
+- name: deploy fail2ban
   block:
-    - name: install default packages for Debian family
+    - name: install ufw on Debian
       ansible.builtin.apt:
         update_cache: yes
-        name: "{{ debian_packages }}"
-
-    - name: install ext packages for Debian family
-      ansible.builtin.apt:
-        name: "{{ debian_ext_packages }}"
-      when: debian_ext_packages|length>0
-  when: ansible_os_family == "Debian"
-
-- name: install packages for RedHat family
-  block:
-    - name: install default packages for RedHat family
-      ansible.builtin.yum:
-        update_cache: yes
-        name: "{{ redhat_packages }}"
-
-    - name: install ext packages for RedHat family
-      ansible.builtin.yum:
-        name: "{{ redhat_ext_packages }}"
-      when: redhat_ext_packages|length>0
-  when: ansible_os_family == "RedHat"
-
-- name: deploy fail2ban on Debian
-  block:
+        name: ufw
+      when: ansible_distribution == 'Debian'
     - name: install fail2ban
       ansible.builtin.apt:
         update_cache: yes
@@ -50,7 +46,7 @@
         enabled: yes
         state: restarted
       when: fail2ban_install.changed or fail2ban_copy_config.changed
-  when: fail2ban_ssh is true and ansible_os_family == "Debian"
+  when: fail2ban_ssh is true
 
 - name: remove fail2ban
   block:

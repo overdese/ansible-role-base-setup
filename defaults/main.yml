@@ -3,9 +3,9 @@
 set_timezone: false
 timezone: Europe/Moscow
 
-debian_ext_packages: []
+upgrade_packages: false
 
-debian_packages:
+packages:
   - screen
   - htop
   - git
@@ -17,24 +17,12 @@ debian_packages:
   - curl
   - mc
 
-redhat_ext_packages: []
+ext_packages: []
 
-redhat_packages:
-  - screen
-  - htop
-  - git
-  - lsof
-  - ca-certificates
-  - zip
-  - unzip
-  - rsync
-  - curl
-  - mc
-
-# fail2ban only debian family availible
 fail2ban_ssh: false
 fail2ban_ssh_maxretry: 5
 fail2ban_ssh_bantime: 22m
+
 fail2ban_uninstall: false
 
 ...
