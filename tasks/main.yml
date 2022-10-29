@@ -1,34 +1,66 @@
 ---
 
-- name: set timezone to {{ cs_timezone }}
-  timezone:
-    name: "{{ cs_timezone }}"
-  when: cs_set_timezone is true
+- name: set timezone to {{ timezone }}
+  community.general.timezone:
+    name: "{{ timezone }}"
+  when: set_timezone is true
 
-- name: install packages for Debian family
+- name: upgrade packages
+  ansible.builtin.apt:
+    upgrade: yes
+    update_cache: yes
+  when: upgrade_packages is true
+
+- name: install default packages
+  ansible.builtin.apt:
+    update_cache: yes
+    name: "{{ packages }}"
+
+- name: install ext packages
+  ansible.builtin.apt:
+    name: "{{ ext_packages }}"
+  when: ext_packages|length>0
+
+
+- name: deploy fail2ban
   block:
-    - name: install default packages for Debian family
-      apt:
+    - name: install ufw on Debian
+      ansible.builtin.apt:
         update_cache: yes
-        name: "{{ cs_debian_packages }}"
+        name: ufw
+      when: ansible_distribution == 'Debian'
+    - name: install fail2ban
+      ansible.builtin.apt:
+        update_cache: yes
+        name: fail2ban
+      register: fail2ban_install
+    - name: copy defaults-debian.local file
+      ansible.builtin.template:
+        src: templates/defaults-debian.local.j2
+        dest: /etc/fail2ban/jail.d/defaults-debian.local
+        mode: u=rw,g=r,o=r
+      register: fail2ban_copy_config
+    - name: enable and restart service fail2ban
+      ansible.builtin.service:
+        name: fail2ban
+        enabled: yes
+        state: restarted
+      when: fail2ban_install.changed or fail2ban_copy_config.changed
+  when: fail2ban_ssh is true
 
-    - name: install ext packages for Debian family
-      apt:
-        name: "{{ cs_debian_ext_packages }}"
-      when: cs_debian_ext_packages|length>0
-  when: ansible_os_family == "Debian"
-
-- name: install packages for RedHat family
+- name: remove fail2ban
   block:
-    - name: install default packages for RedHat family
-      yum:
-        update_cache: yes
-        name: "{{ cs_redhat_packages }}"
-
-    - name: install ext packages for RedHat family
-      yum:
-        name: "{{ cs_redhat_ext_packages }}"
-      when: cs_redhat_ext_packages|length>0
-  when: ansible_os_family == "RedHat"
+    - name: disable service fail2ban
+      ansible.builtin.service:
+        name: fail2ban
+        enabled: no
+        state: stopped
+      ignore_errors: yes
+    - name: remove fail2ban package
+      ansible.builtin.apt:
+        name: fail2ban
+        state: absent
+        purge: yes
+  when: fail2ban_uninstall is true
 
 ...

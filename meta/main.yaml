@@ -1,0 +1,10 @@
+---
+galaxy_info:
+  author: overdese
+  role_name: base_setup
+  description: Initial server setup role
+  license: GPLv3
+  galaxy_tags:
+    - ubuntu
+
+dependencies: []

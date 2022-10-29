@@ -1,11 +1,11 @@
 ---
 
-cs_set_timezone: false
-cs_timezone: Europe/Moscow
+set_timezone: false
+timezone: Europe/Moscow
 
-cs_debian_ext_packages: []
+upgrade_packages: false
 
-cs_debian_packages:
+packages:
   - screen
   - htop
   - git
@@ -17,19 +17,12 @@ cs_debian_packages:
   - curl
   - mc
 
+ext_packages: []
 
-cs_redhat_ext_packages: []
+fail2ban_ssh: false
+fail2ban_ssh_maxretry: 5
+fail2ban_ssh_bantime: 22m
 
-cs_redhat_packages:
-  - screen
-  - htop
-  - git
-  - lsof
-  - ca-certificates
-  - zip
-  - unzip
-  - rsync
-  - curl
-  - mc
+fail2ban_uninstall: false
 
 ...
